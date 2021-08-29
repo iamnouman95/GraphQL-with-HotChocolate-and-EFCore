@@ -16,6 +16,8 @@ namespace GraphQL_HotChoclate_EFCore.Services
             _dbContext = databaseContext;
         }
 
+        #region CRUD operations
+
         public CustomerViewModel Create(CustomerViewModel customer)
         {
             var data = new Customer();
@@ -37,6 +39,7 @@ namespace GraphQL_HotChoclate_EFCore.Services
             _dbContext.Customer.Add(data);
             _dbContext.SaveChanges();
 
+            //Database fetch, to retreive newly created record Id to display to client
             var newRec = _dbContext.Customer.OrderByDescending(x => x.Id).FirstOrDefault();
             customer.Id = newRec.Id;
             customer.CreatedAt = Convert.ToDateTime(newRec.CreatedAt.ToString().Substring(0, 10));
@@ -77,6 +80,7 @@ namespace GraphQL_HotChoclate_EFCore.Services
                 _dbContext.SaveChanges();
             }
 
+            //Database fetch, to newly updated entity to display to client
             var newRec = _dbContext.Customer.FirstOrDefault(x => x.Id == customer.Id);
             customer.Id = newRec.Id;
             customer.Email = newRec.Email;
@@ -89,26 +93,12 @@ namespace GraphQL_HotChoclate_EFCore.Services
             return customer;
         }
 
-        public bool Delete(DeleteVM deleteVM)
+        public bool Delete(CustomerViewModel customer)
         {
-            var customer = _dbContext.Customer.FirstOrDefault(c => c.Id == deleteVM.Id);
-            if (customer is not null)
+            var cust = _dbContext.Customer.FirstOrDefault(c => c.Id == customer.Id);
+            if (cust is not null)
             {
-                _dbContext.Customer.Remove(customer);
-                _dbContext.SaveChanges();
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool DeleteByName(DeleteVM deleteVM)
-        {
-
-            var customer = _dbContext.Customer.FirstOrDefault(c => c.Name == deleteVM.Name);
-            if (customer is not null)
-            {
-                _dbContext.Customer.Remove(customer);
+                _dbContext.Customer.Remove(cust);
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -120,11 +110,8 @@ namespace GraphQL_HotChoclate_EFCore.Services
         {
             return _dbContext.Customer.AsQueryable();
         }
-    }
 
-    public class DeleteVM
-    {
-        public int Id { get; set; }
-        public String Name { get; set; }
+        #endregion
+
     }
 }

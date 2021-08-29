@@ -6,14 +6,10 @@ using HotChocolate.AspNetCore;
 using HotChocolate.AspNetCore.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GraphQL_HotChoclate_EFCore
@@ -39,14 +35,13 @@ namespace GraphQL_HotChoclate_EFCore
             services.AddScoped<Query>();
             services.AddScoped<Mutation>();
             services.AddScoped<ICustomerService, CustomerService>();
-            services.AddGraphQL(c => SchemaBuilder.New().AddServices(c).AddType<GraphQLTypes>()
-                                                                        .AddQueryType<Query>()
-                                                                        .AddMutationType<Mutation>()
-                                                                        .AddProjections()
-                                                                        .AddFiltering()
-                                                                        .AddSorting()
-                                                                         .Create());
 
+            services.AddGraphQLServer().AddType<GraphQLTypes>()
+                                       .AddQueryType<Query>()
+                                       .AddMutationType<Mutation>()
+                                       .AddProjections()
+                                       .AddFiltering()
+                                       .AddSorting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,7 +64,7 @@ namespace GraphQL_HotChoclate_EFCore
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await Task.Run(() => context.Response.Redirect("/playground"));
                 });
             });
         }

@@ -10,8 +10,7 @@ namespace GraphQL_HotChoclate_EFCore.Services
     {
         CustomerViewModel Create(CustomerViewModel customer);
         CustomerViewModel Update(CustomerViewModel customer);
-        bool Delete(DeleteVM deleteVM);
-        bool DeleteByName(DeleteVM deleteVM);
+        bool Delete(CustomerViewModel deleteVM);
         IQueryable<Customer> GetAll();
     }
 }

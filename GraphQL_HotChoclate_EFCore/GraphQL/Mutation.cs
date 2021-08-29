@@ -21,7 +21,6 @@ namespace GraphQL_HotChoclate_EFCore.GraphQL
         #endregion
         public CustomerViewModel Create(CustomerViewModel customer) => _customerService.Create(customer);
         public CustomerViewModel Update(CustomerViewModel customer) => _customerService.Update(customer);
-        public bool Delete(DeleteVM deleteVM) => _customerService.Delete(deleteVM);
-        public bool DeleteByName(DeleteVM deleteVM) =>_customerService.DeleteByName(deleteVM);
+        public bool Delete(CustomerViewModel customer) => _customerService.Delete(customer);
     }
 }
